@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include<vector>
+#include<map>
 #include<string>
 #include<cstring>
 #include"utils.h"
@@ -14,34 +15,71 @@
 using namespace std;
 class ChessBoard {
 public:
-    string grid[8];
+    string* grid;
     string turn;
-    bool is_black_castling;
-    bool is_white_castling;
-    int half_moves;
+    string castlesAvailBlack;
+    string castlesAvailWhite;
+    int halfMoves;
     long long int moves;
 
     ChessBoard(){
         initGrid();
-        is_black_castling = false;
-        is_white_castling = false;
         turn = "WHITE";
     }
 
     ChessBoard(string fenString){
-        initGrid();
-        parseFenString(fenString);
+        grid = getBoardFromFenString(fenString);
+        turn = getTurnStringFromFenString(fenString);
+        castlesAvailBlack = getAvailableCastlesBySide(fenString,"BLACK");
+        castlesAvailWhite = getAvailableCastlesBySide(fenString,"WHITE");
     }
 
-    void parseFenString(string fenString){
+    string getAvailableCastlesBySide(string fenString,string side){
         vector<string> fenComponents =  utils::split(fenString);
-        initGridWithFenBoardString(fenComponents[0]);
+        map<string, string> sidesToPieces = {
+                {"BLACK","prnbqk"},
+                {"WHITE","PRNBQK"}
+        };
+        map<string, int (*)(int)> sidesToCaseFunctions = {
+                {"BLACK",islower},
+                {"WHITE",isupper}
+        };
+        string availableCastles = fenComponents[2];
+        if(availableCastles == "-"){
+            return "-";
+        }
+        int i = 0;
+        char ch = availableCastles[i];
+        string availCastles = "";
+        while( i < availableCastles.size()){
+            if(sidesToPieces[side].find(""+ch) && sidesToCaseFunctions[side](ch)) {
+                availCastles = availCastles + ch;
+            }
+            i++;
+            ch = availableCastles[i];
+        }
+        return availCastles;
     }
 
-    void initGridWithFenBoardString(string fenBoardString){
-        vector<string> board = utils::split(fenBoardString, '/');
+    string getBoardStringFromFenString(string fenString){
+        vector<string> fenComponents =  utils::split(fenString);
+        return fenComponents[0];
+    }
+
+    string getTurnStringFromFenString(string fenString){
+        vector<string> fenComponents =  utils::split(fenString);
+        cout<<fenComponents[1]<<endl;
+        if(fenComponents[1] == "b"){
+            return "BLACK";
+        }
+        return "WHITE";
+    }
+
+    string * getBoardFromFenString(string fenString){
+        vector<string> board = utils::split(getBoardStringFromFenString(fenString) , '/');
+        string* chessGrid = new string[8];
         for(int eachRow=0;eachRow<8;eachRow++) {
-            string chessBoardRow = grid[eachRow];
+            string chessBoardRow = "........";
             int prevPosition = 0;
             string cells = board[eachRow];
             for (int eachCol = 0; eachCol < cells.size(); eachCol++) {
@@ -52,8 +90,9 @@ public:
                 }
                 prevPosition += utils::charToInt(cells[eachCol]);
             }
-            grid[eachRow] = chessBoardRow;
+            chessGrid[eachRow] = chessBoardRow;
         }
+        return chessGrid;
     }
 
     void initGrid(){
@@ -72,12 +111,6 @@ public:
         }
         return os;
     }
-
-    void printHorizontalBorder(int lengthOfHorizontalBorder){
-        for(int i=0;i<lengthOfHorizontalBorder;i++){
-            cout<<"-";
-        }
-    }
 };
 
 ostream& operator<<(ostream& os, ChessBoard chessBoard){
@@ -88,6 +121,8 @@ ostream& operator<<(ostream& os, ChessBoard chessBoard){
         os << "Blacks to play" << '\n';
     }
     chessBoard.printGrid(os);
+    cout<<chessBoard.castlesAvailBlack<<endl;
+    cout<<chessBoard.castlesAvailWhite<<endl;
     return os;
 }
 
