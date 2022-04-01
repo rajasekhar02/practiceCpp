@@ -3,6 +3,7 @@
 #define file2_H
 namespace file2
 {
+    extern int x;
     void printX();
 }
 #endif
