@@ -7,7 +7,8 @@ int main()
 {
     // int x = 10;
     // cout << x << endl;
-    file1::printX();
+    file1::printX(x);
+    file1::printY();
     file2::printX();
     return 0;
 }
