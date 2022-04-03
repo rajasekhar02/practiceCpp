@@ -23,6 +23,7 @@ ChessBoard::ChessBoard(string fenString)
     turn = getTurnStringFromFenString(fenString);
     castlesAvailBlack = getAvailableCastlesBySide(fenString, "BLACK");
     castlesAvailWhite = getAvailableCastlesBySide(fenString, "WHITE");
+    arrayToBitBoards();
 }
 
 string ChessBoard::getAvailableCastlesBySide(string fenString, string side)
@@ -115,6 +116,108 @@ ostream &ChessBoard::printGrid(ostream &os)
         os << grid[eachRow] << endl;
     }
     return os;
+}
+
+void ChessBoard::arrayToBitBoards()
+{
+    string binary;
+    map<char, long long int *> pieceToBitBoard = {
+        {'P', &WP},
+        {'N', &WN},
+        {'B', &WB},
+        {'R', &WR},
+        {'Q', &WQ},
+        {'K', &WK},
+        {'p', &BP},
+        {'n', &BN},
+        {'b', &BB},
+        {'r', &BR},
+        {'q', &BQ},
+        {'k', &BK}};
+    // iterate over all the cells in the grid
+    for (int i = 0; i < 64; i++)
+    {
+        binary = string("0000000000000000000000000000000000000000000000000000000000000000");
+        binary = binary.substr(i + 1) + "1" + binary.substr(0, i);
+        if (grid[i / 8][i % 8] != '.')
+        {
+            *pieceToBitBoard[grid[i / 8][i % 8]] += convertStringToBitBoard(binary);
+        }
+    }
+}
+
+long long int ChessBoard::convertStringToBitBoard(string binary)
+{
+    if (binary[0] == '0')
+    {
+        return stoll(binary, nullptr, 2);
+    }
+    return stoll(string("1") + binary.substr(2), nullptr, 2) * 2;
+}
+
+void ChessBoard::drawArray()
+{
+    string chessBoard[8];
+    for (int i = 0; i < 8; i++)
+    {
+        chessBoard[i] = string("........");
+    }
+    for (int i = 0; i < 64; i++)
+    {
+        if (((WP >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'P';
+        }
+        if (((WN >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'N';
+        }
+        if (((WB >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'B';
+        }
+        if (((WR >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'R';
+        }
+        if (((WQ >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'Q';
+        }
+        if (((WK >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'K';
+        }
+        if (((BP >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'p';
+        }
+        if (((BN >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'n';
+        }
+        if (((BB >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'b';
+        }
+        if (((BR >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'r';
+        }
+        if (((BQ >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'q';
+        }
+        if (((BK >> i) & 1) == 1)
+        {
+            chessBoard[i / 8][i % 8] = 'k';
+        }
+    }
+
+    for (int eachRow = 0; eachRow < 8; eachRow++)
+    {
+        cout << chessBoard[eachRow] << endl;
+    }
 }
 
 ostream &operator<<(ostream &os, ChessBoard chessBoard)

@@ -22,6 +22,20 @@ public:
     int halfMoves;
     long long int moves;
 
+    long long int WP = 0l;
+    long long int WN = 0l;
+    long long int WB = 0l;
+    long long int WR = 0l;
+    long long int WQ = 0l;
+    long long int WK = 0l;
+
+    long long int BP = 0l;
+    long long int BN = 0l;
+    long long int BB = 0l;
+    long long int BR = 0l;
+    long long int BQ = 0l;
+    long long int BK = 0l;
+
     ChessBoard();
 
     ChessBoard(string fenString);
@@ -35,6 +49,12 @@ public:
     string *getBoardFromFenString(string fenString);
 
     void initGrid();
+
+    void arrayToBitBoards();
+
+    long long int convertStringToBitBoard(std::string binary);
+
+    void drawArray();
 
     ostream &printGrid(ostream &os);
 };
