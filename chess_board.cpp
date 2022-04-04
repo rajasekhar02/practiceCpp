@@ -76,7 +76,7 @@ string *ChessBoard::getBoardFromFenString(string fenString)
 {
     vector<string> board = utils::split(getBoardStringFromFenString(fenString), '/');
     string *chessGrid = new string[8];
-    for (int eachRow = 0; eachRow < 8; eachRow++)
+    for (int eachRow = 7; eachRow >= 0; eachRow--)
     {
         string chessBoardRow = "........";
         int prevPosition = 0;
@@ -91,7 +91,7 @@ string *ChessBoard::getBoardFromFenString(string fenString)
             }
             prevPosition += utils::charToInt(cells[eachCol]);
         }
-        chessGrid[eachRow] = chessBoardRow;
+        chessGrid[8 - eachRow - 1] = chessBoardRow;
     }
     return chessGrid;
 }

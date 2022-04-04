@@ -171,7 +171,7 @@ namespace Chess
 
         int getFileIndex(int squareIndex)
         {
-            return squareIndex & 0b000111;
+            return squareIndex & 7;
         }
 
         int IndexFromCoord(int fileIndex, int rankIndex)
