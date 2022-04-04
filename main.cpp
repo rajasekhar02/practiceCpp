@@ -4,8 +4,8 @@
 #include "board_representation.h"
 int main()
 {
-    string fenString = "8/1n3n2/4n3/3n1n2/2n1n3/8/8/8 w - - 0 1";
-    ChessBoard chess_board(fenString);
+    string fenString = "rnbqkbnr/pppp3p/5p2/4p1p1/4P3/5PPB/PPPPN2P/RNBQKR2 w Qkq - 0 1";
+    Chess::ChessBoard chess_board(fenString);
     cout << chess_board << endl;
     chess_board.drawArray();
 
@@ -16,7 +16,7 @@ int main()
 
     Chess::BoardRepresentation::PieceList knights[2] = {Chess::BoardRepresentation::PieceList(10),
                                                         Chess::BoardRepresentation::PieceList(10)};
-    bitset<64> x(chess_board.BN);
+    bitset<64> x(chess_board.WP);
 
     for (int i = 0; i < 64; i++)
     {

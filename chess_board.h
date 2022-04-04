@@ -10,55 +10,59 @@
 
 #ifndef CHESS_CHESS_BOARD_H
 #define CHESS_CHESS_BOARD_H
-
 using namespace std;
-class ChessBoard
+namespace Chess
 {
-public:
-    string *grid;
-    string turn;
-    string castlesAvailBlack;
-    string castlesAvailWhite;
-    int halfMoves;
-    long long int moves;
+    class ChessBoard
+    {
+    public:
+        string *grid;
+        int flatBoard[64];
+        string turn;
+        string castlesAvailBlack;
+        string castlesAvailWhite;
+        string enpassantSquare;
+        int halfMoves;
+        long long int moves;
 
-    long long int WP = 0l;
-    long long int WN = 0l;
-    long long int WB = 0l;
-    long long int WR = 0l;
-    long long int WQ = 0l;
-    long long int WK = 0l;
+        long long int WP = 0l;
+        long long int WN = 0l;
+        long long int WB = 0l;
+        long long int WR = 0l;
+        long long int WQ = 0l;
+        long long int WK = 0l;
 
-    long long int BP = 0l;
-    long long int BN = 0l;
-    long long int BB = 0l;
-    long long int BR = 0l;
-    long long int BQ = 0l;
-    long long int BK = 0l;
+        long long int BP = 0l;
+        long long int BN = 0l;
+        long long int BB = 0l;
+        long long int BR = 0l;
+        long long int BQ = 0l;
+        long long int BK = 0l;
 
-    ChessBoard();
+        ChessBoard();
 
-    ChessBoard(string fenString);
+        ChessBoard(string fenString);
 
-    string getAvailableCastlesBySide(string fenString, string side);
+        string getAvailableCastlesBySide(string fenString, string side);
 
-    string getBoardStringFromFenString(string fenString);
+        string getBoardStringFromFenString(string fenString);
 
-    string getTurnStringFromFenString(string fenString);
+        string getTurnStringFromFenString(string fenString);
 
-    string *getBoardFromFenString(string fenString);
+        string *getBoardFromFenString(string fenString);
 
-    void initGrid();
+        void initGrid();
 
-    void arrayToBitBoards();
+        void initFlatBoard();
 
-    long long int convertStringToBitBoard(std::string binary);
+        void arrayToBitBoards();
 
-    void drawArray();
+        long long int convertStringToBitBoard(std::string binary);
 
-    ostream &printGrid(ostream &os);
-};
+        void drawArray();
 
-ostream &operator<<(ostream &os, ChessBoard chessBoard);
-
+        ostream &printGrid(ostream &os);
+    };
+    ostream &operator<<(ostream &os, ChessBoard chessBoard);
+}
 #endif // CHESS_CHESS_BOARD_H

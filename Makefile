@@ -3,7 +3,8 @@ COMPILER = g++
 
 OBJS =  chess_board.o\
 		utils.o\
-		main.o
+		main.o\
+		board_representation.o
 main: $(OBJS)
 		$(COMPILER) -o CHESS.o $(OBJS)
 		

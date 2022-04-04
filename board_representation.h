@@ -2,9 +2,9 @@
 #define BOARD_REPRESENTATION_H
 #include <string>
 #include <iostream>
+#include <map>
 namespace Chess
 {
-
     namespace Piece
     {
         /**
@@ -23,23 +23,23 @@ namespace Chess
          * 5 th bit is black
          *
          */
-        const int None = 0;
+        const int none = 0;
 
-        const int King = 1;
+        const int king = 1;
 
-        const int Pawn = 2;
+        const int pawn = 2;
 
-        const int Knight = 3;
+        const int knight = 3;
 
-        const int Bishop = 5;
+        const int bishop = 5;
 
-        const int Rook = 6;
+        const int rook = 6;
 
-        const int Queen = 7;
+        const int queen = 7;
 
-        const int White = 8;
+        const int white = 8;
 
-        const int Black = 16;
+        const int black = 16;
 
         const int typeMask = 0b00111;
 
@@ -49,35 +49,26 @@ namespace Chess
 
         const int colourMask = whiteMask | blackMask;
 
-        bool IsGivenColour(int piece, int colour)
-        {
-            return (piece & colourMask) == colour;
-        }
+        const std::map<char, int> pieceSymbolToPieceType = {
+            {'p', pawn},
+            {'r', rook},
+            {'n', knight},
+            {'b', bishop},
+            {'q', queen},
+            {'k', king}};
 
-        int getPieceColour(int piece)
-        {
-            return piece & colourMask;
-        }
+        bool IsGivenColour(int piece, int colour);
 
-        int getPieceType(int piece)
-        {
-            return piece & typeMask;
-        }
+        int getPieceColour(int piece);
 
-        bool isRookOrQueen(int pieceType)
-        {
-            return (pieceType & 0b110) == 0b110;
-        }
+        int getPieceType(int piece);
 
-        bool isBishopOrQueen(int pieceType)
-        {
-            return (pieceType & 0b101) == 0b101;
-        }
+        bool isRookOrQueen(int pieceType);
 
-        bool isSlidingPiece(int pieceType)
-        {
-            return (pieceType & 0b100) != 0;
-        }
+        bool isBishopOrQueen(int pieceType);
+
+        bool isSlidingPiece(int pieceType);
+
     }
     namespace BoardRepresentation
     {
@@ -87,63 +78,28 @@ namespace Chess
             int *map;
             int numPieces;
 
-            PieceList(int maxPieceCount = 16)
-            {
-                occupiedSquares = new int[maxPieceCount]();
-                map = new int[64]();
-                numPieces = 0;
-            }
+            PieceList(int maxPieceCount = 16);
 
-            void addPieceAtSquare(int square)
-            {
-                occupiedSquares[numPieces] = square;
-                map[square] = square;
-                numPieces++;
-            }
+            void addPieceAtSquare(int square);
 
-            void removePieceAtSquare(int square)
-            {
-                int pieceIndex = map[square];
-                occupiedSquares[pieceIndex] = occupiedSquares[numPieces - 1];
-                map[occupiedSquares[pieceIndex]] = pieceIndex;
-                numPieces--;
-            }
+            void removePieceAtSquare(int square);
 
-            void MovePiece(int startSquare, int targetSquare)
-            {
-                int pieceIndex = map[startSquare];
-                occupiedSquares[pieceIndex] = targetSquare;
-                map[targetSquare] = pieceIndex;
-            }
+            void movePiece(int startSquare, int targetSquare);
 
-            const int operator[](int index) const
-            {
-                return occupiedSquares[index];
-            }
+            const int operator[](int index) const;
         };
         struct Coord
         {
             int fileIndex;
             int rankIndex;
-            Coord(int fileIndex, int rankIndex)
-            {
-                this->fileIndex = fileIndex;
-                this->rankIndex = rankIndex;
-            }
-            bool isWhiteSquare()
-            {
-                return (fileIndex + rankIndex) % 2 != 0;
-            }
+            Coord(int fileIndex, int rankIndex);
 
-            const bool operator==(Coord other) const
-            {
-                return (this->fileIndex == other.fileIndex && this->rankIndex == other.rankIndex) ? 0 : 1;
-            }
+            bool isWhiteSquare();
+
+            const bool operator==(Coord other) const;
         };
-        std::ostream &operator<<(std::ostream &os, Coord coord)
-        {
-            os << coord.fileIndex << " " << coord.rankIndex;
-        }
+        std::ostream &operator<<(std::ostream &os, Coord coord);
+
         const std::string fileNames = std::string("abcdefgh");
         const std::string rankNames = std::string("12345678");
         const int a1 = 0;
@@ -164,52 +120,24 @@ namespace Chess
         const int g8 = 62;
         const int h8 = 63;
 
-        int getRankIndex(int squareIndex)
-        {
-            return squareIndex >> 3;
-        }
+        int getRankIndex(int squareIndex);
 
-        int getFileIndex(int squareIndex)
-        {
-            return squareIndex & 7;
-        }
+        int getFileIndex(int squareIndex);
 
-        int IndexFromCoord(int fileIndex, int rankIndex)
-        {
-            return rankIndex * 8 + fileIndex;
-        }
+        int IndexFromCoord(int fileIndex, int rankIndex);
 
-        int IndexFromCoord(Coord coord)
-        {
-            return IndexFromCoord(coord.fileIndex, coord.rankIndex);
-        }
+        int IndexFromCoord(Coord coord);
 
-        Coord getCoordFromIndex(int squareIndex)
-        {
-            return Coord(getFileIndex(squareIndex), getRankIndex(squareIndex));
-        }
+        Coord getCoordFromIndex(int squareIndex);
 
-        bool getLightSquare(int fileIndex, int rankIndex)
-        {
-            return (fileIndex + rankIndex) % 2 != 0;
-        }
+        bool getLightSquare(int fileIndex, int rankIndex);
 
-        std::string getSquareNameFromCoordinate(int fileIndex, int rankIndex)
-        {
-            return (fileNames[fileIndex] + std::to_string(rankIndex + 1));
-        }
+        std::string getSquareNameFromCoordinate(int fileIndex, int rankIndex);
 
-        std::string getSquareNameFromIndex(int squareIndex)
-        {
-            Coord coor = getCoordFromIndex(squareIndex);
-            return getSquareNameFromCoordinate(coor.fileIndex, coor.rankIndex);
-        }
+        std::string getSquareNameFromIndex(int squareIndex);
 
-        std::string getSquareNameFromCoordinate(Coord coord)
-        {
-            return getSquareNameFromCoordinate(coord.fileIndex, coord.rankIndex);
-        }
+        std::string getSquareNameFromCoordinate(Coord coord);
+
     }
 }
-
 #endif
