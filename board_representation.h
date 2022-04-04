@@ -55,7 +55,16 @@ namespace Chess
             {'n', knight},
             {'b', bishop},
             {'q', queen},
-            {'k', king}};
+            {'k', king},
+            {'.', none}};
+        const std::map<int, char> pieceTypeToPieceSymbol = {
+            {pawn, 'p'},
+            {rook, 'r'},
+            {knight, 'n'},
+            {bishop, 'b'},
+            {queen, 'q'},
+            {king, 'k'},
+            {none, '.'}};
 
         bool IsGivenColour(int piece, int colour);
 

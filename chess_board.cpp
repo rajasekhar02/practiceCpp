@@ -39,10 +39,15 @@ namespace Chess
         {
             char piece = grid[(i / 8)][(i % 8)];
             if (piece == '.')
+            {
+                flatBoard[i] = Piece::none;
+                cout << flatBoard[i] << endl;
                 continue;
+            }
             int pieceColor = isupper(piece) ? Piece::white : Piece::black;
             int pieceType = Piece::pieceSymbolToPieceType.at(tolower(piece));
             flatBoard[i] = pieceColor | pieceType;
+            // cout << flatBoard[i] << " " << BoardRepresentation::getSquareNameFromIndex(i) << " " << (Piece::getPieceColour(flatBoard[i]) == 8 ? toupper(Piece::pieceTypeToPieceSymbol(Piece::getPieceType(flatBoard[i]))) : (Piece::pieceTypeToPieceSymbol(Piece::getPieceType(flatBoard[i])))) << endl;
         }
     }
 
