@@ -5,12 +5,11 @@
 #include <string>
 #include <vector>
 
-using namespace std;
 #ifndef CHESS_UTILS_H
 #define CHESS_UTILS_H
 namespace utils
 {
-    vector<string> split(string s, char c = ' ');
+    std::vector<std::string> split(std::string s, char c = ' ');
     int charToInt(char ch);
 }
 #endif // CHESS_UTILS_H
