@@ -21,16 +21,24 @@ struct interval
         this->rightValue = 0.0;
         this->index = 0;
     }
+    char *getDotNodeFormat()
+    {
+        char *s;
+        int stringLen = snprintf(NULL, 0, "struct%d [shape=record, label=\"%f||%f\"];", this->index, this->leftValue, this->rightValue);
+        s = (char *)malloc(sizeof(char) * stringLen);
+        snprintf(s, stringLen, "struct%d [shape=record, label=\"%f||%f\"];", this->index, this->leftValue, this->rightValue);
+        return s;
+    }
     bool operator<(interval otherInterval) const
     {
         return this->rightValue < otherInterval.rightValue;
     }
 };
 
-vector<vector<int>> getAdjacencyListForGivenIntervals(vector<interval> intervals)
+vector<vector<int>> getAdjacencyListForGivenIntervals(vector<interval> intervals, bool undirectional)
 {
     int totalLength = intervals.size();
-    vector<vector<int>> adjacencyList(totalLength);
+    vector<vector<int>> adjacencyList(totalLength, vector<int>());
     for (int i = 0; i < totalLength; i++)
     {
         interval x = intervals[i];
@@ -42,20 +50,78 @@ vector<vector<int>> getAdjacencyListForGivenIntervals(vector<interval> intervals
             if (y.rightValue < x.leftValue && y.rightValue < x.rightValue)
                 continue;
             adjacencyList[i].push_back(j);
-            adjacencyList[j].push_back(i);
+            if (undirectional)
+            {
+                adjacencyList[j].push_back(i);
+            }
         }
+    }
+    return adjacencyList;
+}
+// not working
+vector<vector<int>> getAdjacencyListForGivenSortedIntervalParts(vector<interval> intervals, vector<pair<double, int>> leftValueOfIntervals, vector<pair<double, int>> rightValueOfIntervals)
+{
+    int totalLength = intervals.size();
+    vector<vector<int>> adjacencyList(totalLength, vector<int>());
+    vector<int> visited(totalLength, 0);
+    int j = 0;
+    for (int i = 0; i < leftValueOfIntervals.size() && j < rightValueOfIntervals.size(); i++)
+    {
+        pair<double, int> x = leftValueOfIntervals[i];
+        pair<double, int> y = rightValueOfIntervals[j];
+        while (j < rightValueOfIntervals.size())
+        {
+            y = rightValueOfIntervals[j];
+            cout << x.second << " " << y.second << endl;
+            if (x.second == y.second)
+            {
+                break;
+            }
+            adjacencyList[x.second].push_back(y.second);
+            adjacencyList[y.second].push_back(x.second);
+            visited[y.second] = 1;
+            j++;
+        }
+    }
+    return adjacencyList;
+}
+void printAdjacencyList(vector<vector<int>> adjacencyList)
+{
+    for (int i = 0; i < adjacencyList.size(); i++)
+    {
+        printf("[%d]: ", i);
+        for (int j = 0; j < adjacencyList[i].size(); j++)
+        {
+            cout << " -> " << adjacencyList[i][j];
+        }
+        cout << endl;
     }
 }
 void printDOTFormat(vector<interval> intervals, vector<vector<int>> adjacencyList)
 {
     char filename[] = "./example1.dot"; // filename
     ofstream fout(filename);
-    fout << "digraph g{" << endl;
+    fout << "graph IntervalGraph {" << endl;
     for (int i = 0; i < intervals.size(); i++)
     {
-        fout << "node [shape = record,height = .1];" << endl;
+        fout << intervals[i].getDotNodeFormat() << endl;
     }
+    for (int i = 0; i < intervals.size(); i++)
+    {
+        if (adjacencyList[i].size() == 0)
+        {
+            fout << " struct" << i << ";" << endl;
+        }
+
+        for (int j = 0; j < adjacencyList[i].size(); j++)
+        {
+            fout << " struct" << i << " -- "
+                 << "struct" << adjacencyList[i][j] << ";" << endl;
+        }
+    }
+    fout << "}" << endl;
     // a node has two values
+    fout.close();
 }
 int main(int argc, char **argv)
 {
@@ -66,24 +132,23 @@ int main(int argc, char **argv)
     vector<interval> intervalsV(n);
     vector<pair<double, int>> leftIntervals(n);
     vector<pair<double, int>> rightIntervals(n);
-    interval intervalsA[n];
     double tValue = possibleValuesForT[1] + 10e-10;
     uniform_real_distribution<double> tDirstr1{0, tValue};
     for (int i = 0; i < n; i++)
     {
         intervalsV[i].index = i;
         intervalsV[i].leftValue = distr1(urbg);
-        intervalsA[i].leftValue = intervalsV[i].leftValue;
         double vi = tDirstr1(urbg);
         intervalsV[i].rightValue = min(intervalsV[i].leftValue + vi, 1.0);
-        intervalsA[i].rightValue = intervalsV[i].rightValue;
         leftIntervals[i] = make_pair(intervalsV[i].leftValue, intervalsV[i].index);
         rightIntervals[i] = make_pair(intervalsV[i].rightValue, intervalsV[i].index);
-        cout << intervalsV[i].leftValue << " " << intervalsV[i].rightValue << " " << ((intervalsV[i].rightValue - intervalsV[i].leftValue) < tValue) << endl;
     }
     sort(leftIntervals.begin(), leftIntervals.end());
     sort(rightIntervals.begin(), rightIntervals.end());
-    vector<vector<int>> adjacencyList = getAdjacencyListForGivenIntervals(intervalsV);
-    // printDOTFormat(intervals, adjacencyList);
+    vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenIntervals(intervalsV, false);
+    vector<vector<int>> adjacencyList1 = getAdjacencyListForGivenIntervals(intervalsV, true);
+    // vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenSortedIntervalParts(intervalsV, leftIntervals, rightIntervals);
+    printAdjacencyList(adjacencyList1);
+    printDOTFormat(intervalsV, adjacencyList2);
     return 0;
 }
