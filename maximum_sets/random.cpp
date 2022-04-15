@@ -58,33 +58,6 @@ vector<vector<int>> getAdjacencyListForGivenIntervals(vector<interval> intervals
     }
     return adjacencyList;
 }
-// not working
-vector<vector<int>> getAdjacencyListForGivenSortedIntervalParts(vector<interval> intervals, vector<pair<double, int>> leftValueOfIntervals, vector<pair<double, int>> rightValueOfIntervals)
-{
-    int totalLength = intervals.size();
-    vector<vector<int>> adjacencyList(totalLength, vector<int>());
-    vector<int> visited(totalLength, 0);
-    int j = 0;
-    for (int i = 0; i < leftValueOfIntervals.size() && j < rightValueOfIntervals.size(); i++)
-    {
-        pair<double, int> x = leftValueOfIntervals[i];
-        pair<double, int> y = rightValueOfIntervals[j];
-        while (j < rightValueOfIntervals.size())
-        {
-            y = rightValueOfIntervals[j];
-            cout << x.second << " " << y.second << endl;
-            if (x.second == y.second)
-            {
-                break;
-            }
-            adjacencyList[x.second].push_back(y.second);
-            adjacencyList[y.second].push_back(x.second);
-            visited[y.second] = 1;
-            j++;
-        }
-    }
-    return adjacencyList;
-}
 void printAdjacencyList(vector<vector<int>> adjacencyList)
 {
     for (int i = 0; i < adjacencyList.size(); i++)
