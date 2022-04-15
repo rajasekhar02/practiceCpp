@@ -96,6 +96,11 @@ void printDOTFormat(vector<interval> intervals, vector<vector<int>> adjacencyLis
     // a node has two values
     fout.close();
 }
+bool areTwoNodesAdjacent(int node1, int node2, vector<vector<int>> adjacencyList)
+{
+    vector<int> nodesAdjacent = adjacencyList[node1];
+    return find(nodesAdjacent.begin(), nodesAdjacent.end(), node2) != nodesAdjacent.end();
+}
 int main(int argc, char **argv)
 {
     int n = atoi((argv[1]));
@@ -103,8 +108,7 @@ int main(int argc, char **argv)
     uniform_real_distribution<double> distr1{0, 1};
     double possibleValuesForT[4] = {(double)(1 / n), (double)(1 / sqrt(n)), (double)(1 / log(n)), 0.25f};
     vector<interval> intervalsV(n);
-    vector<pair<double, int>> leftIntervals(n);
-    vector<pair<double, int>> rightIntervals(n);
+    vector<pair<double, int>> linearIntervals(2 * n);
     double tValue = possibleValuesForT[1] + 10e-10;
     uniform_real_distribution<double> tDirstr1{0, tValue};
     for (int i = 0; i < n; i++)
@@ -113,15 +117,15 @@ int main(int argc, char **argv)
         intervalsV[i].leftValue = distr1(urbg);
         double vi = tDirstr1(urbg);
         intervalsV[i].rightValue = min(intervalsV[i].leftValue + vi, 1.0);
-        leftIntervals[i] = make_pair(intervalsV[i].leftValue, intervalsV[i].index);
-        rightIntervals[i] = make_pair(intervalsV[i].rightValue, intervalsV[i].index);
+        linearIntervals[2 * i] = make_pair(intervalsV[i].leftValue, intervalsV[i].index);
+        linearIntervals[2 * i + 1] = make_pair(intervalsV[i].rightValue, intervalsV[i].index);
     }
-    sort(leftIntervals.begin(), leftIntervals.end());
-    sort(rightIntervals.begin(), rightIntervals.end());
-    vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenIntervals(intervalsV, false);
+    sort(linearIntervals.begin(), linearIntervals.end());
+
     vector<vector<int>> adjacencyList1 = getAdjacencyListForGivenIntervals(intervalsV, true);
-    // vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenSortedIntervalParts(intervalsV, leftIntervals, rightIntervals);
-    printAdjacencyList(adjacencyList1);
+    vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenIntervals(intervalsV, false);
     printDOTFormat(intervalsV, adjacencyList2);
+    // vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenSortedIntervalParts(intervalsV, leftIntervals, rightIntervals);
+    // printAdjacencyList(adjacencyList1);
     return 0;
 }
