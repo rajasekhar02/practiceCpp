@@ -24,9 +24,9 @@ struct interval
     char *getDotNodeFormat()
     {
         char *s;
-        int stringLen = snprintf(NULL, 0, "struct%d [shape=record, label=\"%f||%f\"];", this->index, this->leftValue, this->rightValue);
+        int stringLen = snprintf(NULL, 0, "struct%d [shape=record, label=\"%f|I%d|%f\"];", this->index, this->leftValue, this->index, this->rightValue);
         s = (char *)malloc(sizeof(char) * stringLen);
-        snprintf(s, stringLen, "struct%d [shape=record, label=\"%f||%f\"];", this->index, this->leftValue, this->rightValue);
+        snprintf(s, stringLen, "struct%d [shape=record, label=\"%f|I%d|%f\"];", this->index, this->leftValue, this->index, this->rightValue);
         return s;
     }
     bool operator<(interval otherInterval) const
