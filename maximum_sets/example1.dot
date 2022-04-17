@@ -1,27 +1,29 @@
 graph IntervalGraph {
-struct0 [shape=record, label="0.382660|I0|0.575637"]
-struct1 [shape=record, label="0.439292|I1|0.546797"]
-struct2 [shape=record, label="0.807224|I2|0.904006"]
-struct3 [shape=record, label="0.777232|I3|1.000000"]
-struct4 [shape=record, label="0.557459|I4|0.802601"]
-struct5 [shape=record, label="0.872920|I5|1.000000"]
-struct6 [shape=record, label="0.999634|I6|1.000000"]
-struct7 [shape=record, label="0.102248|I7|0.199753"]
-struct8 [shape=record, label="0.006432|I8|0.117546"]
-struct9 [shape=record, label="0.954377|I9|1.000000"]
+struct0 [shape=record, label="0.553963|I0|0.582513"]
+struct1 [shape=record, label="0.508079|I1|0.752386"]
+struct2 [shape=record, label="0.399384|I2|0.557250"]
+struct3 [shape=record, label="0.153596|I3|0.244344"]
+struct4 [shape=record, label="0.437671|I4|0.676998"]
+struct5 [shape=record, label="0.858288|I5|1.000000"]
+struct6 [shape=record, label="0.797438|I6|1.000000"]
+struct7 [shape=record, label="0.933854|I7|1.000000"]
+struct8 [shape=record, label="0.811421|I8|0.991946"]
+struct9 [shape=record, label="0.384708|I9|0.515253"]
  struct0 -- struct1;
+ struct0 -- struct2;
  struct0 -- struct4;
- struct1;
- struct2 -- struct3;
- struct2 -- struct5;
- struct3 -- struct4;
- struct3 -- struct5;
- struct3 -- struct6;
- struct3 -- struct9;
- struct4;
+ struct1 -- struct2;
+ struct1 -- struct4;
+ struct1 -- struct9;
+ struct2 -- struct4;
+ struct2 -- struct9;
+ struct3;
+ struct4 -- struct9;
  struct5 -- struct6;
- struct5 -- struct9;
- struct6 -- struct9;
+ struct5 -- struct7;
+ struct5 -- struct8;
+ struct6 -- struct7;
+ struct6 -- struct8;
  struct7 -- struct8;
  struct8;
  struct9;

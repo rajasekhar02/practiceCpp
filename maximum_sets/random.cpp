@@ -101,6 +101,52 @@ bool areTwoNodesAdjacent(int node1, int node2, vector<vector<int>> adjacencyList
     vector<int> nodesAdjacent = adjacencyList[node1];
     return find(nodesAdjacent.begin(), nodesAdjacent.end(), node2) != nodesAdjacent.end();
 }
+int getMaximumIndependentSet(vector<interval> intervals, vector<vector<int>> adjacencyList)
+{
+    vector<int> maxIndependentSet;
+    vector<int> markedIntervals(intervals.size());
+    vector<pair<double, int>> rightIntervals;
+    int count = 0;
+    cout << "asdf" << endl;
+    while (count != (intervals.size() - 1))
+    {
+        rightIntervals = vector<pair<double, int>>();
+        for (int i = 0; i < intervals.size(); i++)
+        {
+            if (markedIntervals[i] == 0)
+            {
+                rightIntervals.push_back(make_pair(intervals[i].rightValue, i));
+            }
+        }
+        sort(rightIntervals.begin(), rightIntervals.end());
+        if (rightIntervals.size() == 0)
+        {
+            break;
+        }
+        int index = rightIntervals[0].second;
+        maxIndependentSet.push_back(index);
+        vector<int> overlappingIntervals = adjacencyList[index];
+        markedIntervals[index] = 1;
+        for (int i = 0; i < overlappingIntervals.size(); i++)
+        {
+            markedIntervals[overlappingIntervals[i]] = 1;
+        }
+        count = 0;
+        for (int i = 0; i < intervals.size(); i++)
+        {
+            if (markedIntervals[i] == 1)
+            {
+                count++;
+            }
+        }
+    }
+    cout << intervals.size() << endl;
+    for (int i = 0; i < maxIndependentSet.size(); i++)
+    {
+        cout << maxIndependentSet[i] << endl;
+    }
+    return maxIndependentSet.size();
+}
 int main(int argc, char **argv)
 {
     int n = atoi((argv[1]));
@@ -127,5 +173,6 @@ int main(int argc, char **argv)
     printDOTFormat(intervalsV, adjacencyList2);
     // vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenSortedIntervalParts(intervalsV, leftIntervals, rightIntervals);
     // printAdjacencyList(adjacencyList1);
+    cout << getMaximumIndependentSet(intervalsV, adjacencyList1) << endl;
     return 0;
 }
