@@ -2,24 +2,29 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C/C++ Runner: Debug Session",
+      "name": "(gdb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "program": "${workspaceFolder}/maximum_sets/bin/random.out",
+      "args": ["10","Intervals-10-4.csv"],
       "stopAtEntry": false,
-      "cwd": "s:/projects/practiceCpp",
+      "cwd": "${fileDirname}",
       "environment": [],
-      "program": "s:/projects/practiceCpp/build/Debug/outDebug",
-      "internalConsoleOptions": "openOnSessionStart",
+      "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/gdb",
-      "console": "integratedTerminal",
+      "preLaunchTask": "g++ build active file",
+      "miDebuggerPath": "/usr/bin/gdb",
       "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          },
+          {
+              "description":  "Set Disassembly Flavor to Intel",
+              "text": "-gdb-set disassembly-flavor intel",
+              "ignoreFailures": true
+          }
       ]
     }
   ]

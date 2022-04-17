@@ -1,0 +1,29 @@
+graph IntervalGraph {
+struct0 [shape=record, color=black, label="0.366876|I0|0.613865"]
+struct1 [shape=record, color=red, label="0.066564|I1|0.174826"]
+struct2 [shape=record, color=black, label="0.527596|I2|0.783410"]
+struct3 [shape=record, color=black, label="0.841297|I3|1.000000"]
+struct4 [shape=record, color=black, label="0.098599|I4|0.207345"]
+struct5 [shape=record, color=red, label="0.609085|I5|0.634516"]
+struct6 [shape=record, color=black, label="0.772533|I6|0.952425"]
+struct7 [shape=record, color=red, label="0.350669|I7|0.399051"]
+struct8 [shape=record, color=black, label="0.388250|I8|0.688807"]
+struct9 [shape=record, color=red, label="0.657680|I9|0.947514"]
+ struct0 -- struct2;
+ struct0 -- struct5;
+ struct0 -- struct7;
+ struct0 -- struct8;
+ struct1 -- struct4;
+ struct2 -- struct5;
+ struct2 -- struct6;
+ struct2 -- struct8;
+ struct2 -- struct9;
+ struct3 -- struct6;
+ struct3 -- struct9;
+ struct4;
+ struct5 -- struct8;
+ struct6 -- struct9;
+ struct7 -- struct8;
+ struct8 -- struct9;
+ struct9;
+}

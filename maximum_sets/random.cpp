@@ -20,21 +20,22 @@ struct interval
     int index;
     interval()
     {
-        this->leftValue = 0.0;
-        this->rightValue = 0.0;
-        this->index = 0;
+        this->leftValue = -1.0;
+        this->rightValue = -1.0;
+        this->index = -1;
     }
-    interval(int index, double leftValue, double rightValue){
-         this->leftValue = leftValue;
+    interval(int index, double leftValue, double rightValue)
+    {
+        this->leftValue = leftValue;
         this->rightValue = rightValue;
         this->index = index;
     }
-    char *getDotNodeFormat(const char* color="black")
+    char *getDotNodeFormat(const char *color = "black")
     {
         char *s;
-        int stringLen = snprintf(NULL, 0, "struct%d [shape=record, color=%s, label=\"%f|I%d|%f\"];", this->index,color, this->leftValue, this->index, this->rightValue);
+        int stringLen = snprintf(NULL, 0, "struct%d [shape=record, color=%s, label=\"%f|I%d|%f\"];", this->index, color, this->leftValue, this->index, this->rightValue);
         s = (char *)malloc(sizeof(char) * stringLen + 1);
-        snprintf(s, stringLen, "struct%d [shape=record, color=%s, label=\"%f|I%d|%f\"];", this->index,color, this->leftValue, this->index, this->rightValue);
+        snprintf(s, stringLen, "struct%d [shape=record, color=%s, label=\"%f|I%d|%f\"];", this->index, color, this->leftValue, this->index, this->rightValue);
         return s;
     }
     bool operator<(interval otherInterval) const
@@ -101,16 +102,16 @@ void printAdjacencyList(vector<vector<int>> adjacencyList)
         cout << endl;
     }
 }
-void printDOTFormat(vector<interval> intervals, vector<vector<int>> adjacencyList,vector<int> maxIndependentSet,string fileName)
+void printDOTFormat(vector<interval> intervals, vector<vector<int>> adjacencyList, vector<int> maxIndependentSet, string fileName)
 {
-    string fileNameString = "./graphDot/"+fileName+".dot";
-    set<int> maxIndependentSetType(maxIndependentSet.begin(),maxIndependentSet.end());
-    string colors[2] = {"black","red"};
+    string fileNameString = "./graphDot/" + fileName + ".dot";
+    set<int> maxIndependentSetType(maxIndependentSet.begin(), maxIndependentSet.end());
+    string colors[2] = {"black", "red"};
     ofstream fout(fileNameString);
     fout << "graph IntervalGraph {" << endl;
     for (int i = 0; i < intervals.size(); i++)
     {
-        int nodeColorIndex = maxIndependentSetType.find(i) != maxIndependentSetType.end() ? 1:0;
+        int nodeColorIndex = maxIndependentSetType.find(i) != maxIndependentSetType.end() ? 1 : 0;
         fout << intervals[i].getDotNodeFormat(colors[nodeColorIndex].c_str()) << endl;
     }
     for (int i = 0; i < intervals.size(); i++)
@@ -154,7 +155,7 @@ vector<int> getMaximumIndependentSet(vector<interval> intervals, vector<vector<i
         sort(rightIntervals.begin(), rightIntervals.end());
         if (rightIntervals.size() == 0)
         {
-            cout<<"1 set"<<endl;
+            cout << "1 set" << endl;
             break;
         }
         int index = rightIntervals[0].second;
@@ -170,7 +171,7 @@ vector<int> getMaximumIndependentSet(vector<interval> intervals, vector<vector<i
         {
             if (markedIntervals[i] == 1)
             {
-                cout<<i<<endl;
+                cout << i << endl;
                 count++;
             }
         }
@@ -182,7 +183,7 @@ vector<int> getMaximumIndependentSet(vector<interval> intervals, vector<vector<i
     // }
     return maxIndependentSet;
 }
-pair<double, vector<int>> getMaximumIndependentSetAlgo2(vector<interval> intervals)
+double getMaximumIndependentSetAlgo2(vector<interval> intervals, vector<interval> &maximumIndependenSet)
 {
     int n = intervals.size();
     vector<pair<double, int>> linearIntervals(2 * n);
@@ -194,7 +195,7 @@ pair<double, vector<int>> getMaximumIndependentSetAlgo2(vector<interval> interva
     sort(linearIntervals.begin(), linearIntervals.end());
     int mid1 = n / 2;
     int mid2 = mid1 + 1;
-    double mid = linearIntervals[mid1].first + linearIntervals[mid2].first / 2;
+    double mid = (linearIntervals[mid1].first + linearIntervals[mid2].first) / 2;
     vector<interval> sLeft, sRight, sMid;
     for (int i = 0; i < n; i++)
     {
@@ -213,27 +214,47 @@ pair<double, vector<int>> getMaximumIndependentSetAlgo2(vector<interval> interva
         }
     }
     cout << sLeft.size() << " " << sRight.size() << " " << sMid.size() << " " << endl;
-    double x;
+    double rightMostPoint;
     vector<int> xAndMaximumIndependentSet;
-    if (sLeft.size() > 1)
+    if (sLeft.size() > 0)
     {
-        // cout<<
-        pair<double, vector<int>> output = getMaximumIndependentSetAlgo2(sLeft);
-        x = output.first;
+        rightMostPoint = getMaximumIndependentSetAlgo2(sLeft, maximumIndependenSet);
         vector<int> midElementsToDelete;
+        vector<interval> newSMid;
         for (int j = 0; j < sMid.size(); j++)
         {
-            if (sMid[j].leftValue <= x && sMid[j].rightValue >= x)
+            if (!(sMid[j].leftValue <= rightMostPoint && sMid[j].rightValue >= rightMostPoint))
             {
-                midElementsToDelete.push_back(j);
+               newSMid.push_back(sMid[j]);
             }
         }
-        // for(int j=0;j<midElementsToDelete.size();j++){
-        //     sMid.erase(sMid.begin()+midElementsToDelete[j]);
-        // }
+        sMid = vector<interval>(newSMid.begin(),newSMid.end());
     }
-    // cout<<sLeft.size()<<" "<<sRight.size()<<" "<<sMid.size()<<" "<<endl;
-    return make_pair(12, vector<int>());
+    interval leftMostRightIntervalInSMid;
+    if (sMid.size() >= 1)
+    {
+        sort(sMid.begin(),sMid.end());
+        leftMostRightIntervalInSMid = sMid[0];
+    }
+    if (sRight.size() == 0)
+    {
+        if (leftMostRightIntervalInSMid.index >= 0)
+        {
+            maximumIndependenSet.push_back(leftMostRightIntervalInSMid);
+            rightMostPoint = leftMostRightIntervalInSMid.rightValue;
+        }
+    }
+    else
+    {
+        vector<interval> sMidUnionSRight;
+        if (leftMostRightIntervalInSMid.index >= 0)
+        {
+            sMidUnionSRight.push_back(leftMostRightIntervalInSMid);
+        }
+        sMidUnionSRight.insert(sMidUnionSRight.end(), sRight.begin(), sRight.end());
+        rightMostPoint = getMaximumIndependentSetAlgo2(sMidUnionSRight, maximumIndependenSet);
+    }
+    return rightMostPoint;
 }
 void generateFileWithIntervals(int noOfIntervals)
 {
@@ -259,12 +280,12 @@ void generateFileWithIntervals(int noOfIntervals)
         double leftValue = distr1(urbg);
         double vi = tDirstr1(urbg);
         double rightValue = min(leftValue + vi, 1.0);
-        fout<<leftValue<<","<<rightValue<<endl;
+        fout << leftValue << "," << rightValue << endl;
         // fout<<leftValue<<","<<rightValue<< (i == n-1)? "":",";
     }
     fout.close();
 }
-void generateFileWithIntervals2(string fileName,int noOfIntervals)
+void generateFileWithIntervals2(string fileName, int noOfIntervals)
 {
     int n = noOfIntervals;
     urbg.seed(hes);
@@ -273,59 +294,71 @@ void generateFileWithIntervals2(string fileName,int noOfIntervals)
     vector<pair<double, int>> linearIntervals(2 * n);
     double tValue = possibleValuesForT[1] + 10e-10;
     uniform_real_distribution<double> tDirstr1{0, tValue};
-    ofstream fout("./data/"+fileName);
+    ofstream fout("./data/" + fileName);
     for (int i = 0; i < n; i++)
     {
         double leftValue = distr1(urbg);
         double vi = tDirstr1(urbg);
         double rightValue = min(leftValue + vi, 1.0);
-        fout<<to_string(leftValue)+","+to_string(rightValue)+(i == n-1 ? "":",");
+        fout << to_string(leftValue) + "," + to_string(rightValue) + (i == n - 1 ? "" : ",");
     }
     fout.close();
 }
-vector<interval> readIntervalsFromFile(string fileName, int n){
+vector<interval> readIntervalsFromFile(string fileName, int n)
+{
     ifstream fin(fileName);
     vector<interval> intervals;
-    if(!fin.is_open()) return intervals;
-    string line;int count = 0;
-    while(getline(fin,line) && count<n){
-        vector<string> intervalStr =split(line,',');
-        intervals.push_back(interval(count,stof(intervalStr[0]),stof(intervalStr[1])));
+    if (!fin.is_open())
+        return intervals;
+    string line;
+    int count = 0;
+    while (getline(fin, line) && count < n)
+    {
+        vector<string> intervalStr = split(line, ',');
+        intervals.push_back(interval(count, stof(intervalStr[0]), stof(intervalStr[1])));
         count++;
     }
     fin.close();
     return intervals;
 }
-vector<interval> readIntervalsFromFile2(string fileName, int n){
+vector<interval> readIntervalsFromFile2(string fileName, int n)
+{
     ifstream fin(fileName);
     vector<interval> intervals;
-    if(!fin.is_open()) return intervals;
+    if (!fin.is_open())
+        return intervals;
     string line;
     int count = 0;
-    getline(fin,line);
-    vector<string> intervalStr =split(line,',');
-    for(int i=0;i<n;i++){
-        intervals.push_back(interval(i,stof(intervalStr[(2*i)]),stof(intervalStr[(2*i+1)])));
+    getline(fin, line);
+    vector<string> intervalStr = split(line, ',');
+    for (int i = 0; i < n; i++)
+    {
+        intervals.push_back(interval(i, stof(intervalStr[(2 * i)]), stof(intervalStr[(2 * i + 1)])));
     }
-    cout<<intervals.size()<<endl;
+    cout << intervals.size() << endl;
     fin.close();
     return intervals;
 }
 int main(int argc, char **argv)
 {
-    assert(!(argc<3));
+    assert(!(argc < 3));
     int n = atoi((argv[1]));
     string fileName = string(argv[2]);
-    // generateFileWithIntervals2(fileName,n);
-    vector<interval> intervalsV = readIntervalsFromFile2("./data/"+fileName, n);
+    // generateFileWithIntervals2(fileName, n);
+    vector<interval> intervalsV = readIntervalsFromFile2("./data/" + fileName, n);
     vector<vector<int>> adjacencyList1 = getAdjacencyListForGivenIntervals(intervalsV, true);
     vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenIntervals(intervalsV, false);
     vector<int> maximumIndependentSet = getMaximumIndependentSet(intervalsV, adjacencyList1);
     // printAdjacencyList(adjacencyList1);
-    // printDOTFormat(intervalsV, adjacencyList2,maximumIndependentSet,fileName.substr(0,fileName.size()-4));
+    printDOTFormat(intervalsV, adjacencyList2,maximumIndependentSet,fileName.substr(0,fileName.size()-4));
     // vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenSortedIntervalParts(intervalsV, leftIntervals, rightIntervals);
     // printAdjacencyList(adjacencyList1);
     // cout << << endl;
-    // getMaximumIndependentSetAlgo2(intervalsV);
+    vector<interval> maximumIndependentIntervals;
+    getMaximumIndependentSetAlgo2(intervalsV, maximumIndependentIntervals);
+    cout<<maximumIndependentIntervals.size()<<endl;
+    for(int i=0;i<maximumIndependentIntervals.size();i++){
+        cout<<maximumIndependentIntervals[i]<<endl;
+    }
     return 0;
 }
