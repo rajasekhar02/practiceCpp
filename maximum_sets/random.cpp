@@ -344,7 +344,7 @@ int main(int argc, char **argv)
     assert(!(argc < 3));
     int n = atoi((argv[1]));
     string fileName = string(argv[2]);
-    // generateFileWithIntervals2(fileName, n);
+    generateFileWithIntervals2(fileName, n);
     vector<interval> intervalsV = readIntervalsFromFile2("./data/" + fileName, n);
     vector<vector<int>> adjacencyList1 = getAdjacencyListForGivenIntervals(intervalsV, true);
     vector<vector<int>> adjacencyList2 = getAdjacencyListForGivenIntervals(intervalsV, false);
