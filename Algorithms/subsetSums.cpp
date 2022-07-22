@@ -3,7 +3,7 @@
 using namespace std;
 
 vector<int> nums;
-
+vector<pair<int, int>> numsWithWeight;
 int countSubsetsSum(int pos, int sum)
 {
     if (sum == 0)
@@ -22,6 +22,30 @@ int countSubsetsSum(int pos, int sum)
         }
     }
     return subsetCount;
+}
+
+int MaximumWeightSubsetsSum(int pos, int sum, int weight)
+{
+    if (sum == 0)
+    {
+        cout << weight << endl;
+        return weight;
+    }
+    int max = -999;
+    for (int i = pos; i < numsWithWeight.size(); i++)
+    {
+        int tempSum = sum - numsWithWeight[i].first;
+        if (tempSum < 0)
+            continue;
+        int calWgt = weight + numsWithWeight[i].second;
+        // cout << calWgt << endl;
+        int value = MaximumWeightSubsetsSum(i + 1, tempSum, calWgt);
+        if (value > max)
+        {
+            max = value;
+        }
+    }
+    return max;
 }
 
 int countSubsetsSumWithBug(int pos, int sum)
@@ -48,8 +72,15 @@ int countSubsetsSumWithBug(int pos, int sum)
 int main()
 {
     int sum = 15;
-    nums = vector<int>{8, 6, 7, 5, 3, 10, 9};
+    numsWithWeight = vector<pair<int, int>>{
+        {8, 0},
+        {6, 5},
+        {7, 7},
+        {5, 3},
+        {3, 4},
+        {10, 10},
+        {9, 12}};
     sort(nums.begin(), nums.end());
-    cout << countSubsetsSum(0, sum) << endl;
+    cout << MaximumWeightSubsetsSum(0, sum, 0) << endl;
     return 0;
 }
