@@ -28,7 +28,6 @@ int MaximumWeightSubsetsSum(int pos, int sum, int weight)
 {
     if (sum == 0)
     {
-        cout << weight << endl;
         return weight;
     }
     int max = -999;
@@ -38,7 +37,6 @@ int MaximumWeightSubsetsSum(int pos, int sum, int weight)
         if (tempSum < 0)
             continue;
         int calWgt = weight + numsWithWeight[i].second;
-        // cout << calWgt << endl;
         int value = MaximumWeightSubsetsSum(i + 1, tempSum, calWgt);
         if (value > max)
         {
