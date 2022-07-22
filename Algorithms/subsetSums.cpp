@@ -24,6 +24,27 @@ int countSubsetsSum(int pos, int sum)
     return subsetCount;
 }
 
+int countSubsetsSumWithBug(int pos, int sum)
+{
+    if (sum == 0)
+    {
+        return 1;
+    }
+    int subsetCount = 0;
+    for (int i = pos; i < nums.size(); i++)
+    {
+        if (sum - nums[i] < 0)
+            continue;
+        int value = countSubsetsSum(i + 1, sum - nums[i]);
+        if (value > 0)
+        {
+            // this is a bug. because if it only counting once for all the solutions under the subtree
+            subsetCount++;
+        }
+    }
+    return subsetCount;
+}
+
 int main()
 {
     int sum = 15;
