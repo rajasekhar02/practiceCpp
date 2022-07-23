@@ -34,6 +34,8 @@ struct solver *new_solver(int w, int h)
 /**
  * @brief Structure Copying
  *
+ * Only applicable to structure without properties of pointer type
+ *
  */
 game_clues *structureCopy(const game_clues *y)
 {
