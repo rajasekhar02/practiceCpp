@@ -12,6 +12,6 @@ int main()
     // place the algorithm here to calculate time taken
     clock_t end = clock();
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "FIB:\t" << f << "\tTIME:\t" << elapsed_secs << endl;
+    cout << "\tTIME:\t" << elapsed_secs << endl;
     return 0;
 }
