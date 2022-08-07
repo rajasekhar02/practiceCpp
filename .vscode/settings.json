@@ -5,7 +5,8 @@
     "iostream": "cpp",
     "vector": "cpp",
     "iosfwd": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "ostream": "cpp"
   },
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
