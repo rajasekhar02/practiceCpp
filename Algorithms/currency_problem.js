@@ -14,6 +14,19 @@ let get_bills = function(total_value){
     return min_value;
 }
 
+let get_bills_2 = function(total_value){
+    if(total_value == 0) return 0;
+    let min_value = total_value;
+    for(let i=0;i<avail_demonations.length;i++){
+        let remain_value = total_value-avail_demonations[i];
+        if(remain_value >= 0){
+            let output = 1 + get_bills(remain_value);
+            min_value = Math.min(output,min_value);
+        }
+    }
+    return min_value;
+}
+
 let get_bills_greedy = function(total_value){
     let value = total_value;
     let count_bills = 0;
