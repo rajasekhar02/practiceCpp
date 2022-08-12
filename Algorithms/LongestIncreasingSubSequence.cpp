@@ -224,6 +224,18 @@ int solvedp3_2(int position)
     }
     return maxLen;
 }
+
+int iter_dp_lis(){
+    vector<int> arr = nums;
+    for(int i=1;i<arr.size();i++){
+        for(int j=0;j<i;j++){
+            if(arr[i]<=arr[j]) continue;
+            bestLen[i][j] = max( j-1 > 0 ? (bestLen[i-1][j-1]+1):1, bestLen[i-1][j]);
+        }
+    }
+    return bestLen[arr.size()-1][arr.size()-2];
+}
+
 int main()
 {
     // 3
@@ -248,9 +260,9 @@ int main()
         {
             nums[j + 1] = testcases[i][j];
         }
-        // bestLen = vector<vector<int>>(nums.size(), vector<int>(nums.size(), -1));
-        bestLen1d = vector<int>(nums.size(), -1);
-        int value = solvedp3_2(0);
+        bestLen = vector<vector<int>>(nums.size(), vector<int>(nums.size(), 0));
+        // bestLen1d = vector<int>(nums.size(), -1);
+        int value = iter_dp_lis();
         cout << "answer: " << value << endl;
     }
     return 0;
