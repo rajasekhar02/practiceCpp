@@ -218,7 +218,6 @@ int solvedp3_2(int position)
         {
             valueRec = 1 + solvedp3_2(i);
         }
-        // int valueRec = solvedp3_2(i);
         maxLen = max(maxLen, valueRec);
         bestLen1d[i] = maxLen;
     }

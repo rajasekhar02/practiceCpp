@@ -153,6 +153,48 @@ int solveMagicSquare2(vector<vector<int>> magicSquare, int row, int col, int cos
             }
             cout << endl;
         }
+        cout << "cost: " << cost << endl;
+        return cost;
+    }
+    if (col == (magicSquare[0].size()))
+    {
+        // cout << row << " " << col << endl;
+        return solveMagicSquare2(magicSquare, row + 1, 0, cost);
+    }
+    if (row == magicSquare.size())
+    {
+        return 1e4;
+    }
+    int minCost = 1e4;
+    int cost = 0;
+    int value = magicSquare[row][col];
+    for (int i = value; i < (10 + value); i++)
+    {
+        vector<vector<int>> newMagicSquare(magicSquare);
+        int newValue = i % 9;
+        newMagicSquare[row][col] = newValue;
+        int costN = solveMagicSquare2(newMagicSquare, row, col + 1, cost + abs(newValue - value));
+        if (costN < minCost)
+        {
+            minCost = costN;
+        }
+    }
+    return minCost;
+}
+
+int solveMagicSquare3(vector<vector<int>> magicSquare, int row, int col, int cost)
+{
+
+    if (isMagicSquare(magicSquare))
+    {
+        for (int i = 0; i < magicSquare.size(); i++)
+        {
+            for (int j = 0; j < magicSquare[0].size(); j++)
+            {
+                cout << magicSquare[i][j] << " ";
+            }
+            cout << endl;
+        }
         return cost;
     }
     if (col == (magicSquare[0].size()))
@@ -166,12 +208,14 @@ int solveMagicSquare2(vector<vector<int>> magicSquare, int row, int col, int cos
     }
     int minCost = 1e4;
     int value = magicSquare[row][col];
-    for (int i = value; i < (10 + value); i++)
+    for (int errorCorrection = 0; errorCorrection < 10; errorCorrection++)
     {
+
+        int cost = solveMagicSquare2(magicSquare, row, col + 1, cost);
         vector<vector<int>> newMagicSquare(magicSquare);
-        int newValue = i % 9;
+        int newValue = (value + errorCorrection) % 9;
         newMagicSquare[row][col] = newValue;
-        int cost = solveMagicSquare2(newMagicSquare, row, col + 1, cost + abs(newValue - value));
+
         if (cost < minCost)
         {
             minCost = cost;
@@ -183,7 +227,7 @@ int solveMagicSquare2(vector<vector<int>> magicSquare, int row, int col, int cos
 int main()
 {
 
-    cout << "minimum cost " << solveMagicSquare2(notMagicSquare2, 0, 0, 0) << endl;
+    cout << "minimum cost " << solveMagicSquare2(notMagicSquare1, 0, 0, 0) << endl;
 
     return 0;
 }
