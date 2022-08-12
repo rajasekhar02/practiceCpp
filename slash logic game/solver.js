@@ -22,7 +22,31 @@ let isGridFilled = function (problemGrid) {
 let solver = function (problemGrid, solutionGrid, solutionGridRow, solutionGridColumn, slash) {
     // am i at the end of the grid
     if (solutionGridRow === slashGrid.length - 1 && solutionGridColumn === slashGrid[0].length - 1) {
-        console.log(solutionGrid.map((x, index) => [grid[index].map(y => ("" + y).padStart(2)).join("\t"), "  " + x.map(x => x.padStart(2)).join("\t")].join('\n')).join('\n'));
+        console.log(
+            solutionGrid
+                .map(
+                    (x, index) => {
+                        return [
+                            grid[index].map(y => ("" + y).padStart(2)).join("\t"),
+                            x.map(x => x.padStart(3, " ")).join(" ").padStart(2)
+                        ].join('\n')
+                    }
+
+                ).join('\n')
+            + "\n" + grid[grid.length - 1].map(y => ("" + y).padStart(2)).join("\t")
+        );
+        console.log(
+            solutionGrid
+                .map(
+                    (x, index) =>
+                        [
+                            problemGrid[index].map(y => ("" + y).padStart(2)).join("\t"),
+                            x.map(x => x.padStart(3, " ")).join(" ").padStart(2)
+                        ].join('\n')
+
+                ).join('\n')
+            + "\n" + problemGrid[grid.length - 1].map(y => ("" + y).padStart(2)).join("\t")
+        );
         //        console.log(isGridFilled(problemGrid));
         return isGridFilled(problemGrid);
     }
@@ -37,20 +61,14 @@ let solver = function (problemGrid, solutionGrid, solutionGridRow, solutionGridC
     let newSolutionGrid = JSON.parse(JSON.stringify(solutionGrid));
 
     if (slash === '/') {
-        if (problemGrid[problemGridRow + 1][problemGridCol] - 1 >= 0 && problemGrid[problemGridRow][problemGridCol + 1] !== 0) {
+        if (problemGrid[problemGridRow + 1][problemGridCol] !== 0 && problemGrid[problemGridRow][problemGridCol + 1] !== 0) {
             newProblemGrid[problemGridRow + 1][problemGridCol]--;
-            newSolutionGrid[solutionGridRow][solutionGridColumn] = slash;
-        }
-        if (problemGrid[problemGridRow][problemGridCol + 1] - 1 >= 0 && problemGrid[problemGridRow + 1][problemGridCol] !== 0) {
             newProblemGrid[problemGridRow][problemGridCol + 1]--;
             newSolutionGrid[solutionGridRow][solutionGridColumn] = slash;
         }
     } else {
-        if (problemGrid[problemGridRow][problemGridCol] - 1 >= 0 && problemGrid[problemGridRow + 1][problemGridCol + 1] !== 0) {
+        if (problemGrid[problemGridRow][problemGridCol] !== 0 && problemGrid[problemGridRow + 1][problemGridCol + 1] !== 0) {
             newProblemGrid[problemGridRow][problemGridCol]--;
-            newSolutionGrid[solutionGridRow][solutionGridColumn] = slash;
-        }
-        if (problemGrid[problemGridRow + 1][problemGridCol + 1] - 1 >= 0 && problemGrid[problemGridRow][problemGridCol] !== 0) {
             newProblemGrid[problemGridRow + 1][problemGridCol + 1]--;
             newSolutionGrid[solutionGridRow][solutionGridColumn] = slash;
         }
