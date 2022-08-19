@@ -5,17 +5,15 @@ int main(){
     cin>>t;
     int cnt = t;
     while(t--){
-        int output;
+        int output = 0;
         int input;
-        int total = 0;
         int childs,N;
         cin>>N>>childs;
         for(int i=0;i<N;i++){
             cin>>input;
-            total += input;
+            output += input%childs;
         }
-        output = total%childs;
-        cout<<"Case #"<<(cnt-t)<<": "<<output<<endl;
+        cout<<"Case #"<<(cnt-t)<<": "<<(output%childs)<<endl;
     }
     return 0;
 }
