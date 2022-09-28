@@ -1,4 +1,4 @@
-let str = "abcdcba" //"aababaabce"  //"aaaaaaaaaa"//"abcdcba" //"aaaaabba" //"aaabaaabaaa"
+let str = "aababaabce" //"aababaabce"  //"aaaaaaaaaa"//"abcdcba" //"aaaaabba" //"aaabaaabaaa"
 let dp = new Array(str.length).fill(1).map(_=>new Array(str.length+1).fill(-1));
 let isPalindrome = function(position,length){
     if(length == 0 || length == 1){
@@ -23,18 +23,18 @@ for(let everyLength=2;everyLength<str.length+1;everyLength++){
 }
 
 
-let k = 3;
+let k = 4;
 let dpMaxPalins = new Array(str.length).fill(-1)
 let noOfNonOverlappingPalins = function(position){
-    if(position>=str.length-1){
-        return 0;
+    if(position==str.length-k){
+        return dp[position][k];
     }
     if(dpMaxPalins[position] != -1){
         return dpMaxPalins[position];
     }
     let maxValue = 0;
     for(let everyIndex1=position; everyIndex1<str.length; everyIndex1++){
-         for(let everyLength=k; everyLength<(str.length-everyIndex1+1); everyLength++){
+         for(let everyLength=k; (everyIndex1+everyLength)<(str.length+1); everyLength++){
             let value = dp[everyIndex1][everyLength] + noOfNonOverlappingPalins(everyIndex1+everyLength);
             if(value>maxValue){
                 maxValue=value;
