@@ -1,3 +1,5 @@
+// Algorithm for Palindrome Substrings of length>=k
+
 let str = "aababaabce" //"aababaabce"  //"aaaaaaaaaa"//"abcdcba" //"aaaaabba" //"aaabaaabaaa"
 let dp = new Array(str.length).fill(1).map(_=>new Array(str.length+1).fill(-1));
 let isPalindrome = function(position,length){
