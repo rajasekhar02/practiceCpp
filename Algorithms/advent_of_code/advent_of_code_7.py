@@ -59,10 +59,12 @@ def findDirAtmost100T(folderName, folderStructure):
     return currFolderSize
 
 def findDirAtmostGivenSpace(folderName, folderStructure, minRequiredSpace):
-    currFolderSize = (folderStructure[folderName]["total-size"] <= requiredSpace) * folderStructure[folderName]["total-size"]
+    currFolderSize = folderStructure[folderName]['total-size']
     for eachSubFolderName in folderStructure[folderName]['sub-folders']:
-        currFolderSize = findDirAtmostGivenSpace(eachSubFolderName, folderStructure[folderName]['sub-folders'], minRequiredSpace)
-    return currFolderSize
+        childSize = findDirAtmostGivenSpace(eachSubFolderName, folderStructure[folderName]['sub-folders'], minRequiredSpace)
+        if (childSize < currFolderSize) and ((childSize - minRequiredSpace) >= 0):
+            currFolderSize = childSize
+    return  currFolderSize
 
 inputLines = input.split("\n")
 
@@ -94,14 +96,11 @@ for eachInputLine in inputLines:
             newFile = createFile(fileName, int(part1))
             addFile(newFile, rootFileSystem, stack)
 
+print(f"Part1: {findDirAtmost100T('/', rootFileSystem)}")
 
-# findDirAtmost100k()
-# question what is sum of the directories that are less than 100000
-# print(findDirAtmost100T("/", rootFileSystem))
 availableSpace = 70000000
 occupiedSpace = rootFileSystem["/"]["total-size"]
 freeSpace = availableSpace-occupiedSpace
 requiredSpace = 30000000
 deleteSpaceSize = requiredSpace - freeSpace
-print(findDirAtmostGivenSpace("/", rootFileSystem, deleteSpaceSize))
-# print(rootFileSystem)
+print(f"Part2: {findDirAtmostGivenSpace('/', rootFileSystem, deleteSpaceSize)}")
