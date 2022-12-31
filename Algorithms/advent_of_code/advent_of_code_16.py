@@ -68,7 +68,7 @@ Valve CD has flow rate=0; tunnels lead to valves YH, XK
 Valve AL has flow rate=0; tunnels lead to valves AA, NU
 Valve WC has flow rate=0; tunnels lead to valves OE, AA"""
 
-list_of_valves_str = large_input.split("\n")
+list_of_valves_str = small_input.split("\n")
 
 valve_pressure = {}
 adj_list = {}
@@ -125,14 +125,23 @@ while time < 30 and len(visited_valves) < len(valve_pressure):
     for key in list(dist[curr_position]):
         if key == curr_position:
             continue
+        # denominator = (
+        #     (dist[curr_position][key] + 1)*incrementer+total_pressure+temp_valve_pressure[key]
+        #     if temp_valve_pressure[key] > 0
+        #     else dist[curr_position][key]
+        # )
+        add_time_for_valve_open = 2 if temp_valve_pressure[key] > 0 else 0
+        numerator = (
+            dist[curr_position][key] + add_time_for_valve_open
+        ) * incrementer + temp_valve_pressure[key]
+        denominator = dist[curr_position][key] + add_time_for_valve_open
         available_valves.append(
             {
                 "position": key,
                 "pressure": temp_valve_pressure[key],
                 "time_taken": dist[curr_position][key],
-                "heuristic_value": round(
-                    temp_valve_pressure[key] / dist[curr_position][key]
-                ),
+                "heuristic_value": round(numerator / denominator, 1)
+                # round(temp_valve_pressure[key] / denominator, 1),
             }
         )
     available_valves = sorted(
